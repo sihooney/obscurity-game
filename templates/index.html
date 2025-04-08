@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Obscurity Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="wide-container">
+        <h1>Wikipedia Obscurity Game</h1>
+        <p>Try to reach the most obscure article in a limited number of clicks.</p>
+
+        <form method="POST" action="{{ url_for('start_game') }}">
+            <label for="url"><strong>Start from a Wikipedia article (optional):</strong></label><br>
+            <input type="text" id="url" name="url" placeholder="https://en.wikipedia.org/wiki/Your_Article" size="60"><br><br>
+
+            <label for="clicks"><strong>Number of clicks allowed:</strong></label><br>
+            <input type="number" id="clicks" name="clicks" min="1" max="10" value="3" required><br><br>
+
+            <button type="submit" class="btn">Start Game</button>
+        </form>
+
+        {% if error %}
+            <p style="color: red; margin-top: 20px;"><strong>Error:</strong> {{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
