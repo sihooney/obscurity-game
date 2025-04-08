@@ -54,27 +54,24 @@ def get_random_wikipedia_page():
 def get_wikipedia_pageviews(article_title, days=30):
     # Calculate start and end dates
     # yesterday (latest available data)
-    end_date = datetime.today() - timedelta(days=1)
-    start_date = end_date - timedelta(days=days - 1)
-
-    start_str = start_date.strftime("%Y%m%d")
-    end_str = end_date.strftime("%Y%m%d")
+    end_date = datetime.now().strftime("%Y%m%d")
+    start_date = (datetime.now() - timedelta(days)).strftime("%Y%m%d")
 
     # Encode the article title for use in the URL
     encoded_title = quote(article_title.replace(" ", "_"), safe='')
 
-    endpoint = f"https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/{encoded_title}/daily/{start_str}/{end_str}"
+    endpoint = f"https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{encoded_title}/daily/{start_date}/{end_date}"
 
     headers = {
-        'User-Agent': 'obscurity-game (hackathon project)'
+        'User-Agent': 'obscurity-game (hackathon project) sihaninfinite@gmail.com'
     }
 
     try:
         response = requests.get(endpoint, headers=headers)
         response.raise_for_status()
         data = response.json()
-        total_views = sum(item["views"] for item in data["items"])
-        return total_views
+        avg_views = sum(item["views"] for item in data["items"]) / 30
+        return round(avg_views)
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data: {e}")
     except KeyError:
@@ -146,12 +143,3 @@ def play_game(clicks_allowed):
             continue
 
         total_clicks += 1
-
-    # After the clicks are finished, show the pageview stats for the final page
-    print(f"\nFinal page: {current_page}")
-    pageviews = get_wikipedia_pageviews(current_page)
-
-    if pageviews is not None:
-        print(f"Pageview count for '{current_page}': {pageviews}")
-    else:
-        print(f"Could not retrieve pageview data for '{current_page}'.")

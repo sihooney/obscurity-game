@@ -17,7 +17,7 @@
 
         {% if game_over %}
         <p><strong>Game over!</strong></p>
-        <p>Page views in last 30 days: {{ views }}</p>
+        <p>Average daily page view count over the past 30 days: {{ views }}</p>
         <a href="{{ url_for('index') }}" class="btn">Play Again</a>
         {% else %}
         <form method="POST">
