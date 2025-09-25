@@ -1,0 +1,63 @@
+<!-- templates/result.html -->
+{% extends "base.html" %}
+{% block title %}Game Over - Wikipedia Obscurity Game{% endblock %}
+{% block content %}
+<h1>Game Over!</h1>
+
+<div class="result-box">
+    <h2>Final Page: <a href="https://en.wikipedia.org/wiki/{{ current_page|urlencode }}" target="_blank">
+            {{ current_page }}
+        </a></h2>
+
+    {% if views is not none %}
+    <div class="score">{{ "{:,}".format(views) }}</div>
+    <div class="score-label">Average Daily Views (last 30 days)</div>
+
+    {% if views < 100 %} <p style="color: #28a745; font-size: 1.2em; margin-top: 20px;">Excellent! That's extremely
+        obscure!</p>
+        {% elif views < 1000 %} <p style="color: #17a2b8; font-size: 1.2em; margin-top: 20px;">Great job! That's
+            quite obscure!</p>
+            {% elif views < 10000 %} <p style="color: #ffc107; font-size: 1.2em; margin-top: 20px;">Good effort!
+                Moderately obscure.</p>
+                {% else %}
+                <p style="color: #dc3545; font-size: 1.2em; margin-top: 20px;">Keep trying! This page is still quite
+                    popular.</p>
+                {% endif %}
+                {% else %}
+                <p style="color: #666;">Unable to fetch view statistics for this page.</p>
+                {% endif %}
+
+                {% if categories %}
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #dee2e6;">
+                    <h4>Page Categories:</h4>
+                    <div style="margin-top: 10px;">
+                        {% for cat in categories %}
+                        <a href="https://en.wikipedia.org/wiki/Category:{{ cat|urlencode }}" target="_blank">
+                            {{ cat }}
+                        </a>{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if no_links %}
+                <p style="color: #856404; margin-top: 20px;"> No more links were available from this page!</p>
+                {% endif %}
+</div>
+
+<div class="path">
+    <h3>Your Journey ({{ clicks_used }} clicks used):</h3>
+    {% for page in path %}
+    <span class="path-item">
+        {{ loop.index }}.
+        <a href="https://en.wikipedia.org/wiki/{{ page|urlencode }}" target="_blank">
+            {{ page }}
+        </a>
+    </span>
+    {% endfor %}
+</div>
+
+<div style="margin-top: 30px; text-align: center;">
+    <a href="{{ url_for('index') }}" class="btn">Play Again</a>
+</div>
+{% endblock %}

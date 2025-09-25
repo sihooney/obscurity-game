@@ -1,39 +1,58 @@
-<!DOCTYPE html>
-<html>
+<!-- templates/game.html -->
+{% extends "base.html" %}
+{% block title %}Playing - Wikipedia Obscurity Game{% endblock %}
+{% block content %}
+<h1>
+    Current Page:
+    <a href="https://en.wikipedia.org/wiki/{{ current_page|urlencode }}" target="_blank">
+        {{ current_page }}
+    </a>
+</h1>
+{% if extract %}
+<div
+    style="padding: 15px; background: #f0f8ff; border-left: 4px solid #667eea; margin-bottom: 20px; border-radius: 8px;">
+    <p style="color: #555; font-style: italic;">{{ extract }}</p>
+</div>
+{% endif %}
 
-<head>
-    <title>Game</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-
-<body>
-    <div class="wide-container">
-        <h2>Current Page: {{ current_page }}</h2>
-        <p><strong>Clicks left: {{ max_clicks - clicks }}</strong></p>
-
-        <iframe src="https://en.wikipedia.org/wiki/{{ current_page | replace(' ', '_') }}" width="100%" height="500px"
-            style="border: 1px solid #ccc; border-radius: 8px; margin-bottom: 20px;">
-        </iframe>
-
-        {% if game_over %}
-        <p><strong>Game over!</strong></p>
-        <p>Average daily page view count over the past 30 days: {{ views }}</p>
-        <a href="{{ url_for('index') }}" class="btn">Play Again</a>
-        {% else %}
-        <form method="POST">
-            <p>Select a link by clicking it:</p>
-            <div class="link-list">
-                {% for link in links[:20] %}
-                <p>
-                    <button type="submit" name="link" value="{{ link }}" class="plain-link">
-                        https://en.wikipedia.org/wiki/{{ link | replace(' ', '_') }}
-                    </button>
-                </p>
-                {% endfor %}
-            </div>
-        </form>
-        {% endif %}
+<div class="stats">
+    <div class="stat">
+        <div class="stat-value">{{ clicks_used }}</div>
+        <div class="stat-label">Clicks Used</div>
     </div>
-</body>
+    <div class="stat">
+        <div class="stat-value">{{ clicks_remaining }}</div>
+        <div class="stat-label">Clicks Remaining</div>
+    </div>
+    <div class="stat">
+        <div class="stat-value">{{ max_clicks }}</div>
+        <div class="stat-label">Total Clicks</div>
+    </div>
+</div>
 
-</html>
+{% if links %}
+<h3>Choose your next page ({{ total_links }} links found, in lexicographic order):</h3>
+
+<div class="links-grid">
+    {% for link in links %}
+    <form action="{{ url_for('navigate') }}" method="POST" style="display: inline;">
+        <input type="hidden" name="next_page" value="{{ link.title }}">
+        <button type="submit" class="link-btn" title="{{ link.title }}">{{ link.display }}</button>
+    </form>
+    {% endfor %}
+</div>
+{% else %}
+<p>No links available from this page!</p>
+{% endif %}
+
+<div class="path">
+    <h3>Your Path:</h3>
+    {% for page in path %}
+    <span class="path-item">{{ loop.index }}. {{ page }}</span>
+    {% endfor %}
+</div>
+
+<div style="margin-top: 30px;">
+    <a href="{{ url_for('reset_game') }}" class="btn btn-secondary">Start New Game</a>
+</div>
+{% endblock %}
