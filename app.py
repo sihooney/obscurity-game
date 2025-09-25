@@ -7,11 +7,12 @@ from game import (
     get_page_extract,
     get_page_categories
 )
+from dotenv import load_dotenv
 import os
 
 app = Flask(__name__)
-app.secret_key = os.environ.get(
-    'SECRET_KEY', 'your-secret-key-here-change-in-production')
+load_dotenv()
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 # Set to True in production with HTTPS
 app.config['SESSION_COOKIE_SECURE'] = False
