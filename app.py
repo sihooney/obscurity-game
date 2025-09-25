@@ -15,7 +15,7 @@ load_dotenv()
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 # Set to True in production with HTTPS
-app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_SECURE'] = True
 
 
 @app.route('/')
