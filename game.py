@@ -14,7 +14,7 @@ WIKIMEDIA_PAGEVIEWS_API = "https://wikimedia.org/api/rest_v1/metrics"
 
 # User-Agent header is REQUIRED by Wikipedia API
 # Must be descriptive and include contact info
-USER_AGENT = "WikipediaObscurityGame/1.0 (https://github.com/yourusername/wiki-game; your-email@example.com) Python/requests"
+USER_AGENT = "WikipediaObscurityGame (https://github.com/sihooney/obscurity-game/; sihaninfinite@gmail.com) Python/requests"
 
 
 def create_session():
